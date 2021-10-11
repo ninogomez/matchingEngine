@@ -8,6 +8,9 @@ const matchingEngine = new MatchingEngine();
 describe("Matching Engine", () => {
   describe("BID", () => {
     it("BID should match limit order in order book", () => {
+      /*
+        Limit bid order is set with matching ask order in the order book
+      */
       const limitOrder = {
         id: OrderBookDB.length + 1,
         volume: 10,
@@ -16,11 +19,14 @@ describe("Matching Engine", () => {
       };
 
       let orderIdResult = matchingEngine.search(limitOrder, OrderBookDB);
-      assert.equal(typeof orderIdResult === "number", true);
+      assert.equal(typeof orderIdResult === "number", true); // checks if the return is a number or not
       assert.notEqual(_.find(OrderBookDB, { id: orderIdResult }), undefined);
       // console.table(OrderBookDB);
     });
     it("BID match not found, create book enter", () => {
+      /*
+        Limit bid order not found, create an order in the order enter
+      */
       const limitOrder = {
         id: OrderBookDB.length + 1,
         volume: 10,
@@ -28,12 +34,16 @@ describe("Matching Engine", () => {
         price: 55,
       };
       let orderIdResult = matchingEngine.search(limitOrder, OrderBookDB);
+      // The add to book entry is in the matchingEngine as stated in the specs.
 
-      assert.equal(typeof orderIdResult === "number", false);
-      assert.equal(typeof _.find(OrderBookDB, { id: limitOrder.id }), "object");
+      assert.equal(typeof orderIdResult === "number", false); // should not return a number
+      assert.equal(typeof _.find(OrderBookDB, { id: limitOrder.id }), "object"); // limit bid order now added to the order book
       // console.table(OrderBookDB);
     });
     it("BID returns multiple matches and returns first", () => {
+      /*
+        Checks if there are multiple matches for the BID order. 
+      */
       const limitOrder = {
         id: OrderBookDB.length + 1,
         volume: 10,
@@ -50,7 +60,7 @@ describe("Matching Engine", () => {
           limitOrder
         )}`
       );
-      assert.equal(typeof result !== "object", true);
+      assert.equal(typeof result !== "object", true); // checks if the returned is not an array (multiple)
       // console.log(OrderBookDB);
     });
   });
